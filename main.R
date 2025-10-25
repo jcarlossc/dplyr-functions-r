@@ -76,8 +76,35 @@ dados %>%
   summarise(media_salarial = mean(salario))
 
 
+# -----------------------------------------------------------------------------
+# 2. Funções de junção (joins).
+# -----------------------------------------------------------------------------
 
+# Data frame 1: alunos e suas notas
+alunos <- tibble(
+  id = c(1, 2, 3, 4),
+  nome = c("Ana", "Bruno", "Carlos", "Diana"),
+  nota = c(8.5, 7.2, 9.1, 6.8)
+)
 
+# Data frame 2: alunos e suas turmas
+turmas <- tibble(
+  id = c(2, 3, 4, 5),
+  turma = c("A", "B", "A", "C")
+)
+
+# Retém apenas correspondências.
+inner_join(alunos, turmas, by = "id")
+# Retém todas de aluno, adiciona de turmas se corresponder.
+left_join(alunos, turmas, by = "id")
+# Retém todas de turma, adiciona de alunos se corresponder.
+right_join(alunos, turmas, by = "id")
+# Retém todas de ambos.
+full_join(alunos, turmas, by = "id")
+# Retém apenas linhas de alunos com correspondência em turma.
+semi_join(alunos, turmas, by = "id")
+# Retém apenas linhas de alunos sem correspondência em turma.
+anti_join(alunos, turmas, by = "id")
 
 
 
