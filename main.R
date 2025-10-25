@@ -107,11 +107,35 @@ semi_join(alunos, turmas, by = "id")
 anti_join(alunos, turmas, by = "id")
 
 
+# -----------------------------------------------------------------------------
+#3. Funções de combinação e ligação de data frames.
+# -----------------------------------------------------------------------------
 
+# Data frame 1: cliente
+cliente <- tibble(
+  id = c(1, 2, 3, 4),
+  nome = c("Carlos", "Bruno", "Soares", "Jose")
+)
 
+# Data frame 2: clientes
+clientes <- tibble(
+  id = c(1, 2, 3, 4),
+  nome = c("Carlos", "Teresa", "Soares", "Jose")
+)
 
+# Une data frames empilhando linhas.
+bind_rows(clientes, cliente)
 
+# Une data frames lado a lado (colunas).
+bind_cols(clientes, cliente)
 
+# Une data frames removendo duplicatas.
+union(clientes, cliente)
 
+# Retorna linhas comuns.
+intersect(clientes, cliente)
+
+# Retorna linhas de clientes que não estão em cliente.
+setdiff(clientes, cliente)
 
 
