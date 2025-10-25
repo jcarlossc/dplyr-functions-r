@@ -87,7 +87,7 @@ alunos <- tibble(
   nota = c(8.5, 7.2, 9.1, 6.8)
 )
 
-# Data frame 2: alunos e suas turmas
+# Data frame 2: turmas.
 turmas <- tibble(
   id = c(2, 3, 4, 5),
   turma = c("A", "B", "A", "C")
@@ -108,7 +108,7 @@ anti_join(alunos, turmas, by = "id")
 
 
 # -----------------------------------------------------------------------------
-#3. Funções de combinação e ligação de data frames.
+# 3. Funções de combinação e ligação de data frames.
 # -----------------------------------------------------------------------------
 
 # Data frame 1: cliente
@@ -137,5 +137,51 @@ intersect(clientes, cliente)
 
 # Retorna linhas de clientes que não estão em cliente.
 setdiff(clientes, cliente)
+
+
+# -----------------------------------------------------------------------------
+# 4. Funções auxiliares para colunas.
+# -----------------------------------------------------------------------------
+
+# Criação de um data frame fictício sobre funcionários
+dados_01 <- data.frame(
+  nome = c("Ana", "Bruno", "Carlos", "Daniela", "Eduardo", "Fernanda", "Gustavo", "Helena"),
+  idade = c(25, 32, 40, 29, 45, 38, 27, 34),
+  cargo = c("Analista", "Gerente", "Técnico", "Analista", "Diretor", "Coordenadora", "Estagiário", "Analista"),
+  salario = c(3500, 7200, 2800, 4000, 12000, 6500, 1500, 3800),
+  departamento = c("TI", "RH", "Manutenção", "TI", "Administração", "RH", "TI", "Marketing"),
+  remoto = c(TRUE, FALSE, FALSE, TRUE, FALSE, TRUE, TRUE, TRUE)
+)
+
+# Renomeia colunas.
+rename(dados_01, nome_funcionario = nome)
+# ou.
+dados_01 %>%
+  rename(depart = departamento)
+
+# Renomeia várias colunas com uma função.
+colunas_maiusculas <- rename_with(dados_01, toupper)
+# ou.
+dados_01 %>%
+  rename_with(toupper)
+
+# Reorganiza ordem das colunas.
+relocate(dados_01, cargo, .before = idade)
+# ou.
+dados_01 %>%
+  relocate(salario, .before = remoto)
+
+# Extrai uma coluna como vetor
+pull(dados_01, idade)
+#ou.
+dados_01 %>%
+  pull(nome)
+
+# Aplica função a várias colunas.
+# Ex: sobre os dados_01, onde for numérico, aplique a função de média.
+dados_01 %>%
+  summarise(across(where(is.numeric), mean))
+
+
 
 
