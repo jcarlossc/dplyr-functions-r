@@ -38,11 +38,15 @@ select(dados, nome)
 dados %>%
   select(nome)
 
+# ----------------
+
 #FILTER() -  Filtra linhas com base em condições.
 filter(dados, idade > 40)
 # ou.
 dados %>%
   filter(idade > 40)
+
+# ----------------
 
 # MUTATE - Cria ou modifica colunas.
 mutate(dados, salario_mais_abono = (salario * 0.10) + salario)
@@ -51,6 +55,8 @@ dados %>%
   select(nome, salario) %>%
   mutate(valor_abono = dados$salario * 0.10) %>%
   mutate(total = (dados$salario * 0.10) + salario)
+
+# ----------------
 
 # SUMMARISE() OU SUMMARIZE() - Resume os dados (normalmente com group_by).
 summarise(dados, mean(salario))
@@ -61,12 +67,16 @@ dados %>%
   select(salario) %>%
   summarise(mean(salario)) 
 
+# ----------------
+
 # ARRANGE() - Ordena linhas.
 arrange(dados, idade)
 # ou.
 dados %>%
   select(salario) %>%
   arrange(salario)
+
+# ----------------
 
 # GROUP_BY() - Agrupa dados para operações de resumo.
 group_by(dados, nome)
@@ -95,14 +105,29 @@ turmas <- tibble(
 
 # Retém apenas correspondências.
 inner_join(alunos, turmas, by = "id")
+
+# ----------------
+
 # Retém todas de aluno, adiciona de turmas se corresponder.
 left_join(alunos, turmas, by = "id")
+
+# ----------------
+
 # Retém todas de turma, adiciona de alunos se corresponder.
 right_join(alunos, turmas, by = "id")
+
+# ----------------
+
 # Retém todas de ambos.
 full_join(alunos, turmas, by = "id")
+
+# ----------------
+
 # Retém apenas linhas de alunos com correspondência em turma.
 semi_join(alunos, turmas, by = "id")
+
+# ----------------
+
 # Retém apenas linhas de alunos sem correspondência em turma.
 anti_join(alunos, turmas, by = "id")
 
@@ -126,14 +151,22 @@ clientes <- tibble(
 # Une data frames empilhando linhas.
 bind_rows(clientes, cliente)
 
+# ----------------
+
 # Une data frames lado a lado (colunas).
 bind_cols(clientes, cliente)
+
+# ----------------
 
 # Une data frames removendo duplicatas.
 union(clientes, cliente)
 
+# ----------------
+
 # Retorna linhas comuns.
 intersect(clientes, cliente)
+
+# ----------------
 
 # Retorna linhas de clientes que não estão em cliente.
 setdiff(clientes, cliente)
@@ -183,5 +216,57 @@ dados_01 %>%
   summarise(across(where(is.numeric), mean))
 
 
+# -----------------------------------------------------------------------------
+# 4. Funções de contagem e amostragem.
+# -----------------------------------------------------------------------------
+
+# Conta número de observações por grupo.
+count(dados_01, departamento)
+# ou.
+dados_01 %>%
+  count(departamento)
+
+# ----------------
+
+# Adiciona coluna de contagem sem agrupar.
+add_count(dados_01, departamento)
+# ou.
+dados_01 %>%
+  add_count(departamento)
+
+# ----------------
+
+# Retorna tamanho do grupo (usado dentro de summarise).
+summarise(dados_01, n())
+# ou.
+summarize(dados_01, n())
+# ou.
+dados_01 %>%
+  summarise(n()) 
+
+# ----------------
+
+# Conta número de valores distintos.
+n_distinct(dados_01$departamento)
+# ou.
+dados_01 %>%
+  select(departamento) %>%
+  n_distinct()
+
+# ----------------
+
+# Amostra n linhas aleatórias.
+sample_n(dados_01, 3)
+# ou.
+dados_01 %>%
+  sample_n(3)
+
+# ----------------
+
+# Amostra uma fração de linhas.
+sample_frac(dados_01, 0.3)
+# ou.
+dados_01 %>%
+  sample_frac(0.4)
 
 
