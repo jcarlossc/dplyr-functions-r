@@ -293,8 +293,77 @@ dados %>%
 
 
 # -----------------------------------------------------------------------------
-# 6. Agrupamento avançado.
+# 7. Agrupamento avançado.
 # -----------------------------------------------------------------------------
+
+# Agrupando a coluna salário.
+departamento_agrupado <- dados %>%
+  group_by(departamento)
+
+# Imprime grupo.
+departamento_agrupado
+
+# Remove o agrupamento, voltando ao formato original.
+departamento_agrupado %>%
+  summarise(media_salario = mean(salario)) %>%
+  ungroup() %>%
+  mutate(media_geral = mean(media_salario))
+
+# ----------------
+
+# Retorna sempre um novo data frame, mesmo dentro de um summarise() — 
+# útil quando se quer mais de uma linha por grupo.
+dados %>%
+  group_by(departamento) %>%
+  reframe(
+    min_salario = min(salario),
+    max_salario = max(salario)
+  )
+
+# ----------------
+
+# Aplica uma função a cada grupo e retorna uma lista (não combina 
+# automaticamente os resultados).
+dados %>%
+  group_by(departamento) %>%
+  group_map(~ summarise(.x, media = mean(salario)))
+
+# ----------------
+
+# Aplica uma função a cada grupo e combina os resultados em um 
+# único data frame.
+dados %>%
+  group_by(departamento) %>%
+  group_modify(~ summarise(.x, media = mean(salario)))
+
+# ----------------
+
+# Divide o data frame em uma lista de sub–data frames (um por grupo).
+lista_departamentos <- dados %>%
+  group_by(departamento) %>%
+  group_split()
+
+# Visualizar o primeiro grupo (ex: "RH")
+lista_departamentos[[1]]  
+
+# ----------------
+
+# Retorna as chaves únicas (valores distintos usados para agrupar).
+dados %>%
+  group_by(departamento, salario) %>%
+  group_keys()
+
+# ----------------
+
+# Retorna o índice numérico do grupo ao qual cada linha pertence.
+dados %>%
+  group_by(departamento) %>%
+  mutate(indice = group_indices())
+
+
+
+
+
 
 
 
