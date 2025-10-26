@@ -21,7 +21,7 @@ library(dplyr)
 # Criação de um data frame fictício sobre funcionários.
 dados <- data.frame(
   nome = c("Ana", "Bruno", "Carlos", "Daniela", "Eduardo", "Fernanda", "Gustavo", "Helena"),
-  idade = c(25, 32, 40, 29, 45, 38, 27, 34),
+  idade = c(25, 61, 40, 29, 45, 38, 27, NaN),
   cargo = c("Analista", "Gerente", "Técnico", "Analista", "Diretor", "Coordenadora", "Estagiário", "Analista"),
   salario = c(3500, 7200, 2800, 4000, 12000, 6500, 1500, 3800),
   departamento = c("TI", "RH", "Manutenção", "TI", "Administração", "RH", "TI", "Marketing"),
@@ -103,32 +103,32 @@ turmas <- tibble(
   turma = c("A", "B", "A", "C")
 )
 
-# Retém apenas correspondências.
+# INNER_JOIN() - Retém apenas correspondências.
 inner_join(alunos, turmas, by = "id")
 
 # ----------------
 
-# Retém todas de aluno, adiciona de turmas se corresponder.
+# LEFT_JOIN() - Retém todas de aluno, adiciona de turmas se corresponder.
 left_join(alunos, turmas, by = "id")
 
 # ----------------
 
-# Retém todas de turma, adiciona de alunos se corresponder.
+# RIGHT_JOIN() - Retém todas de turma, adiciona de alunos se corresponder.
 right_join(alunos, turmas, by = "id")
 
 # ----------------
 
-# Retém todas de ambos.
+# FULL_JOIN() - Retém todas de ambos.
 full_join(alunos, turmas, by = "id")
 
 # ----------------
 
-# Retém apenas linhas de alunos com correspondência em turma.
+# SEMI_JOIN() - Retém apenas linhas de alunos com correspondência em turma.
 semi_join(alunos, turmas, by = "id")
 
 # ----------------
 
-# Retém apenas linhas de alunos sem correspondência em turma.
+# ANTI_JOIN() - Retém apenas linhas de alunos sem correspondência em turma.
 anti_join(alunos, turmas, by = "id")
 
 
@@ -148,27 +148,27 @@ clientes <- tibble(
   nome = c("Carlos", "Teresa", "Soares", "Jose")
 )
 
-# Une data frames empilhando linhas.
+# BIND_ROWS() - Une data frames empilhando linhas.
 bind_rows(clientes, cliente)
 
 # ----------------
 
-# Une data frames lado a lado (colunas).
+# BIND_COLS() - Une data frames lado a lado (colunas).
 bind_cols(clientes, cliente)
 
 # ----------------
 
-# Une data frames removendo duplicatas.
+# UNION() - Une data frames removendo duplicatas.
 union(clientes, cliente)
 
 # ----------------
 
-# Retorna linhas comuns.
+# INTERSECT() - Retorna linhas comuns.
 intersect(clientes, cliente)
 
 # ----------------
 
-# Retorna linhas de clientes que não estão em cliente.
+# SETDIFF() - Retorna linhas de clientes que não estão em cliente.
 setdiff(clientes, cliente)
 
 
@@ -176,97 +176,126 @@ setdiff(clientes, cliente)
 # 4. Funções auxiliares para colunas.
 # -----------------------------------------------------------------------------
 
-# Criação de um data frame fictício sobre funcionários
-dados_01 <- data.frame(
-  nome = c("Ana", "Bruno", "Carlos", "Daniela", "Eduardo", "Fernanda", "Gustavo", "Helena"),
-  idade = c(25, 32, 40, 29, 45, 38, 27, 34),
-  cargo = c("Analista", "Gerente", "Técnico", "Analista", "Diretor", "Coordenadora", "Estagiário", "Analista"),
-  salario = c(3500, 7200, 2800, 4000, 12000, 6500, 1500, 3800),
-  departamento = c("TI", "RH", "Manutenção", "TI", "Administração", "RH", "TI", "Marketing"),
-  remoto = c(TRUE, FALSE, FALSE, TRUE, FALSE, TRUE, TRUE, TRUE)
-)
-
-# Renomeia colunas.
-rename(dados_01, nome_funcionario = nome)
+# RENAME() - Renomeia colunas.
+rename(dados, nome_funcionario = nome)
 # ou.
-dados_01 %>%
+dados %>%
   rename(depart = departamento)
 
-# Renomeia várias colunas com uma função.
-colunas_maiusculas <- rename_with(dados_01, toupper)
+# RENAME_WITH() - Renomeia várias colunas com uma função.
+rename_with(dados, toupper)
 # ou.
-dados_01 %>%
+dados %>%
   rename_with(toupper)
 
-# Reorganiza ordem das colunas.
-relocate(dados_01, cargo, .before = idade)
+# RELOCATE() - Reorganiza ordem das colunas.
+relocate(dados, cargo, .before = idade)
 # ou.
-dados_01 %>%
+dados %>%
   relocate(salario, .before = remoto)
 
-# Extrai uma coluna como vetor
-pull(dados_01, idade)
+# PULL() - Extrai uma coluna como vetor.
+pull(dados, idade)
 #ou.
-dados_01 %>%
+dados %>%
   pull(nome)
 
-# Aplica função a várias colunas.
+# ACROSS() - Aplica função a várias colunas.
 # Ex: sobre os dados_01, onde for numérico, aplique a função de média.
-dados_01 %>%
+dados %>%
   summarise(across(where(is.numeric), mean))
 
 
 # -----------------------------------------------------------------------------
-# 4. Funções de contagem e amostragem.
+# 5. Funções de contagem e amostragem.
 # -----------------------------------------------------------------------------
 
-# Conta número de observações por grupo.
-count(dados_01, departamento)
+# COUNT() - Conta número de observações por grupo.
+count(dados, departamento)
 # ou.
-dados_01 %>%
+dados %>%
   count(departamento)
 
 # ----------------
 
-# Adiciona coluna de contagem sem agrupar.
-add_count(dados_01, departamento)
+# ADD_COUNT() - Adiciona coluna de contagem sem agrupar.
+add_count(dados, departamento)
 # ou.
-dados_01 %>%
+dados %>%
   add_count(departamento)
 
 # ----------------
 
-# Retorna tamanho do grupo (usado dentro de summarise).
-summarise(dados_01, n())
+# SUMMARASE() - Retorna tamanho do grupo (usado dentro de summarise).
+summarise(dados, n())
 # ou.
-summarize(dados_01, n())
+summarize(dados, n())
 # ou.
-dados_01 %>%
+dados %>%
   summarise(n()) 
 
 # ----------------
 
-# Conta número de valores distintos.
-n_distinct(dados_01$departamento)
+# N_DISTINCT() - Conta número de valores distintos.
+n_distinct(dados$departamento)
 # ou.
-dados_01 %>%
+dados %>%
   select(departamento) %>%
   n_distinct()
 
 # ----------------
 
-# Amostra n linhas aleatórias.
+# SAMPLE_N() - Amostra n linhas aleatórias.
 sample_n(dados_01, 3)
 # ou.
-dados_01 %>%
+dados %>%
   sample_n(3)
 
 # ----------------
 
-# Amostra uma fração de linhas.
-sample_frac(dados_01, 0.3)
+# SAMPLE_FRAC() - Amostra uma fração de linhas.
+sample_frac(dados, 0.3)
 # ou.
-dados_01 %>%
+dados %>%
   sample_frac(0.4)
+
+
+# -----------------------------------------------------------------------------
+# 6. Manipulação condicional e de valores.
+# -----------------------------------------------------------------------------
+
+# IF_ELSE() - Condicional vetorizada,
+mutate(dados, status = if_else(idade > 18, "adulto", "menor"))
+# ou.
+dados %>%
+  mutate(status = if_else(idade > 18, "adulto", "menor"))
+
+# ----------------
+
+# CASE_WHEN() - Múltiplas condições.
+mutate(dados, faixa = case_when(idade < 18 ~ "jovem", idade < 60 ~ "adulto", TRUE ~ "idoso"))
+# ou.
+dados %>%
+  mutate(faixa = case_when(idade < 18 ~ "jovem", idade < 60 ~ "adulto", TRUE ~ "idoso"))
+
+# ----------------
+
+# COALESCE() - Substitui valores NA por outro.
+coalesce(dados$idade, 0)
+
+# ----------------
+
+# BETWEEN() - Verifica se valores estão entre dois limites.
+filter(dados, between(idade, 18, 30))
+# ou.
+dados %>%
+  filter(between(idade, 18, 30))
+
+# ----------------
+
+
+
+
+
 
 
