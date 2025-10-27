@@ -20,12 +20,12 @@ library(dplyr)
 
 # Criação de um data frame fictício sobre funcionários.
 dados <- data.frame(
-  nome = c("Ana", "Bruno", "Carlos", "Daniela", "Eduardo", "Fernanda", "Gustavo", "Helena"),
-  idade = c(25, 61, 40, 29, 45, 38, 27, NaN),
-  cargo = c("Analista", "Gerente", "Técnico", "Analista", "Diretor", "Coordenadora", "Estagiário", "Analista"),
-  salario = c(3500, 7200, 2800, 4000, 12000, 6500, 1500, 3800),
-  departamento = c("TI", "RH", "Manutenção", "TI", "Administração", "RH", "TI", "Marketing"),
-  remoto = c(TRUE, FALSE, FALSE, TRUE, FALSE, TRUE, TRUE, TRUE)
+  nome = c("Ana", "Bruno", "Carlos", "Daniela", "Eduardo", "Fernanda", "Gustavo", "Helena", "Carlos"),
+  idade = c(25, 61, 40, 29, 45, 38, 27, NaN, 40),
+  cargo = c("Analista", "Gerente", "Técnico", "Analista", "Diretor", "Coordenadora", "Estagiário", "Analista", "Técnico"),
+  salario = c(3500, 7200, 2800, 4000, 12000, 6500, 1500, 3800, 2800),
+  departamento = c("TI", "RH", "Manutenção", "TI", "Administração", "RH", "TI", "Marketing", "Manutenção"),
+  remoto = c(TRUE, FALSE, FALSE, TRUE, FALSE, TRUE, TRUE, TRUE, FALSE)
 )
 
 # -----------------------------------------------------------------------------
@@ -414,6 +414,59 @@ select(dados, departamento, everything())
 dados %>%
   select(departamento, everything())
 
+
+# -----------------------------------------------------------------------------
+# 9. Outras utilidades.
+# -----------------------------------------------------------------------------
+
+# DISTINCT() - Remove linhas duplicadas.
+distinct(dados)
+# ou.
+dados %>%
+  distinct()
+
 # ----------------
 
+# SLICE() - Seleciona linhas por posição.
+slice(dados, c(1,2,3))
+# ou.
+dados %>%
+  slice(c(2,3,4))
 
+# ----------------
+
+# Seleciona o início, o fim ou uma amostra aleatória de linhas.
+
+# SLICE_HEAD() - Primeiras 3 linhas.
+dados %>%
+  slice_head(n = 3)
+
+
+# SLICE_TAIL() - Últimas 2 linhas.
+dados %>%
+  slice_tail(n = 2)
+
+# SLICE_SAMPLE() - Amostra aleatória de 3 linhas.
+dados %>%
+  slice_sample(n = 3)
+
+# ----------------
+
+# ROW_NUMBER() - Retorna número da linha.
+mutate(dados, indice = row_number())
+# ou.
+dados %>%
+  mutate(indice = row_number())
+
+# ----------------
+
+# Comparar salário atual com o próximo registro.
+dados %>%
+  mutate(
+    proximo_salario = lead(salario),
+    anterior_salario = lag(salario)
+  )
+
+# -----------------------------------------------------------------------------
+# 10. Até a próxima!
+# -----------------------------------------------------------------------------
