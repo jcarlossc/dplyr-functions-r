@@ -303,7 +303,7 @@ departamento_agrupado <- dados %>%
 # Imprime grupo.
 departamento_agrupado
 
-# Remove o agrupamento, voltando ao formato original.
+# UNGROUP() - Remove o agrupamento, voltando ao formato original.
 departamento_agrupado %>%
   summarise(media_salario = mean(salario)) %>%
   ungroup() %>%
@@ -311,8 +311,8 @@ departamento_agrupado %>%
 
 # ----------------
 
-# Retorna sempre um novo data frame, mesmo dentro de um summarise() — 
-# útil quando se quer mais de uma linha por grupo.
+# REFRAME() - Retorna sempre um novo data frame, mesmo dentro 
+# de um summarise() — útil quando se quer mais de uma linha por grupo.
 dados %>%
   group_by(departamento) %>%
   reframe(
@@ -322,23 +322,24 @@ dados %>%
 
 # ----------------
 
-# Aplica uma função a cada grupo e retorna uma lista (não combina 
-# automaticamente os resultados).
+# GROUP_MAP() - Aplica uma função a cada grupo e retorna uma 
+# lista (não combina automaticamente os resultados).
 dados %>%
   group_by(departamento) %>%
   group_map(~ summarise(.x, media = mean(salario)))
 
 # ----------------
 
-# Aplica uma função a cada grupo e combina os resultados em um 
-# único data frame.
+# GROUP_MODIFY() - Aplica uma função a cada grupo e combina os 
+#resultados em um único data frame.
 dados %>%
   group_by(departamento) %>%
   group_modify(~ summarise(.x, media = mean(salario)))
 
 # ----------------
 
-# Divide o data frame em uma lista de sub–data frames (um por grupo).
+# GROUP_SPLIT() - Divide o data frame em uma lista de 
+# sub–data frames (um por grupo).
 lista_departamentos <- dados %>%
   group_by(departamento) %>%
   group_split()
@@ -348,23 +349,71 @@ lista_departamentos[[1]]
 
 # ----------------
 
-# Retorna as chaves únicas (valores distintos usados para agrupar).
+# GROUP_KEYS() - Retorna as chaves únicas (valores distintos usados 
+# para agrupar).
 dados %>%
   group_by(departamento, salario) %>%
   group_keys()
 
 # ----------------
 
-# Retorna o índice numérico do grupo ao qual cada linha pertence.
+# GROUP_INDICES() - Retorna o índice numérico do grupo ao qual cada 
+# linha pertence.
 dados %>%
   group_by(departamento) %>%
   mutate(indice = group_indices())
 
 
+# -----------------------------------------------------------------------------
+# 8. Predicados (para seleção com select() e across()).
+# -----------------------------------------------------------------------------
 
+# STARTS_WITH() - Colunas que começam com...
+select(dados, starts_with("dep"))
+# ou.
+dados %>%
+  select(starts_with("dep"))
 
+# ----------------
 
+# ENDS_WITH() - Selecionar colunas que terminam com...
+select(dados, ends_with("ade"))
+# ou.
+dados %>%
+  select(ends_with("ade"))
 
+# ----------------
 
+# CONTAINS() - Selecionar colunas que contêm...
+select(dados, contains("ario"))
+# ou.
+dados %>%
+  select(contains("ario"))
+
+# ----------------
+
+# MATCHES() - Selecionar colunas cujo nome termina com "o" (regex).
+select(dados, matches("e$"))
+# ou.
+dados %>%
+  select(matches("e$"))
+
+# ----------------
+
+# WHERE() - Selecionar apenas colunas numéricas.
+select(dados, where(is.numeric))
+# ou.
+dados %>%
+  select(where(is.numeric))
+
+# ----------------
+
+# EVERYTHING() - Mover a coluna "departamento" para o início.
+select(dados, departamento, everything())
+# ou.
+dados %>%
+  select(departamento, everything())
+
+# ----------------
 
 
